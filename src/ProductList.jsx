@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; // ✅ added useSelector
 import { addItem } from "./CartSlice";
 import './ProductList.css'
 import CartItem from './CartItem';
@@ -7,9 +7,19 @@ import CartItem from './CartItem';
 function ProductList({ onHomeClick }) {
     const dispatch = useDispatch();
 
+    // ✅ read cart items from Redux
+    const cartItems = useSelector((state) => state.cart.items);
+
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false);
     const [addedToCart, setAddedToCart] = useState({});
+
+    // ✅ Task-4 helper function (exact Coursera hint logic)
+    const calculateTotalQuantity = () => {
+        return cartItems
+            ? cartItems.reduce((total, item) => total + item.quantity, 0)
+            : 0;
+    };
 
     const plantsArray = [
         {
@@ -293,7 +303,7 @@ function ProductList({ onHomeClick }) {
                     <div>
                         <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
                             <h1 className='cart'>
-                                🛒
+                                🛒 {calculateTotalQuantity()}
                             </h1>
                         </a>
                     </div>
